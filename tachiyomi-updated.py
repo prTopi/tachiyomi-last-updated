@@ -4,12 +4,12 @@ from argparse import ArgumentParser
 from sqlite3 import connect
 from datetime import date, timedelta
 
-ap = ArgumentParser(description="Reads Tachiyomi database and lists all "
-                    "series which haven't been updated in specified time.")
-ap.add_argument("-y", "--years", type=int, default=0, help="Number of years")
-ap.add_argument("-m", "--months", type=int, default=0, help="Number of months")
-ap.add_argument("-w", "--weeks", type=int, default=0, help="Number of weeks")
-ap.add_argument("-d", "--days", type=int, default=0, help="Number of days")
+ap = ArgumentParser(description="Reads Tachiyomi database and lists all series"
+                    "which haven't been updated within specified time frame.")
+ap.add_argument("-y", "--years", default=0, type=float)
+ap.add_argument("-m", "--months", default=0, type=float)
+ap.add_argument("-w", "--weeks", default=0, type=float)
+ap.add_argument("-d", "--days", default=0, type=float)
 args = ap.parse_args()
 
 if not isfile("tachiyomi.db"):
