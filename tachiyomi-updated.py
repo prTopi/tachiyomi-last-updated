@@ -8,6 +8,7 @@ ap = ArgumentParser(description="Reads Tachiyomi database and lists all "
                     "series which haven't been updated in specified time.")
 ap.add_argument("-y", "--years", type=int, default=0, help="Number of years")
 ap.add_argument("-m", "--months", type=int, default=0, help="Number of months")
+ap.add_argument("-w", "--weeks", type=int, default=0, help="Number of weeks")
 ap.add_argument("-d", "--days", type=int, default=0, help="Number of days")
 args = ap.parse_args()
 
@@ -35,11 +36,10 @@ for line in chaps:
 
 db.close()
 
-days = int(args.years) * 365 + int(args.months) * 30.417 + int(args.days)
-lastDate = date.today() - timedelta(days=days)
+days = args.years * 365.25 + args.months * 30.4375 + args.days
+lastDate = date.today() - timedelta(days=days, weeks=args.weeks)
+
+print("Series that have not been updates since {0}:".format(lastDate))
 for x in chapterTimes:
-    value = str(chapterTimes[x])
-    if len(value) > 3:
-        time = date.fromtimestamp(int(value[:-3]))
-        if time < lastDate:
-            print(">", manga[x])
+    if date.fromtimestamp(chapterTimes[x]/1000) < lastDate:
+        print("> " + manga[x])
