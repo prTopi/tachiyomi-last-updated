@@ -23,13 +23,13 @@ print("You have a total of {0} manga!\n".format(len(manga)))
 chaps = c.execute("SELECT manga_id, date_upload FROM chapters WHERE "
                   "manga_id IN ({0})".format(','.join('?' for _ in manga)),
                   list(manga))
-db.close()
-
 chapterTimes = {x: 0 for x in manga}
 for line in chaps:
     mangaId, value = line
     if chapterTimes[mangaId] < value:
         chapterTimes[mangaId] = value
+
+db.close()
 
 days = int(args.years) * 365 + int(args.months) * 30.417 + int(args.days)
 lastDate = date.today() - timedelta(days=days)
