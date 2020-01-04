@@ -11,14 +11,14 @@ ap.add_argument("-d", "--days", type=int, default=0, help="Number of days")
 args = ap.parse_args()
 with connect("tachiyomi.db") as db:
     c = db.cursor()
-    mangas = dict(c.execute("SELECT _id, title FROM mangas WHERE favorite=1")
+    manga = dict(c.execute("SELECT _id, title FROM mangas WHERE favorite=1")
                   .fetchall())
-    print(f"You have a total of {len(mangas)} manga!\n")
-    chapters = c.execute("SELECT manga_id, date_upload FROM chapters WHERE "
-                         f"manga_id IN ({','.join('?' for _ in mangas)})",
-                         list(mangas))
-    chapterTimes = {x: 0 for x in mangas}
-    for line in chapters:
+    print("You have a total of {0} manga!\n".format(len(manga)))
+    chaps = c.execute("SELECT manga_id, date_upload FROM chapters WHERE "
+                      "manga_id IN ({0})".format(','.join('?' for _ in manga)),
+                      list(manga))
+    chapterTimes = {x: 0 for x in manga}
+    for line in chaps:
         mangaId, value = line
         if chapterTimes[mangaId] < value:
             chapterTimes[mangaId] = value
@@ -29,4 +29,4 @@ with connect("tachiyomi.db") as db:
         if len(value) > 3:
             time = date.fromtimestamp(int(value[:-3]))
             if time < lastDate:
-                print(f"> {mangas[x]}")
+                print(">", manga[x])
