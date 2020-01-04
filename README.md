@@ -4,7 +4,9 @@ Reads Tachiyomi database and lists all series which haven't been updated in spec
 
 ### Usage
 Needs root (ADB may work, untested.)
+
 Copy tachiyomi.db from `/data/data/eu.kanade.tachiyomi/databases` to working directory.
+
 If using tachiyomi dev version, copy from `/data/data/eu.kanade.tachiyomi.debug/databases` instead.
 
 `usage: tachiyomi-updated.py [-h] [-y YEARS] [-m MONTHS] [-w WEEKS] [-d DAYS]`
