@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from os import listdir
+from os.path import isfile
 from argparse import ArgumentParser
 from sqlite3 import connect
 from datetime import date, timedelta
@@ -11,7 +11,7 @@ ap.add_argument("-m", "--months", type=int, default=0, help="Number of months")
 ap.add_argument("-d", "--days", type=int, default=0, help="Number of days")
 args = ap.parse_args()
 
-if "tachiyomi.db" not in listdir("."):
+if not isfile("tachiyomi.db"):
     raise FileNotFoundError("database file (tachiyomi.db) not found")
 
 db = connect("tachiyomi.db")
@@ -23,10 +23,14 @@ print("You have a total of {0} manga!\n".format(len(manga)))
 chaps = c.execute("SELECT manga_id, date_upload FROM chapters WHERE "
                   "manga_id IN ({0})".format(','.join('?' for _ in manga)),
                   list(manga))
-chapterTimes = {x: 0 for x in manga}
+
+chapterTimes = {}
 for line in chaps:
     mangaId, value = line
-    if chapterTimes[mangaId] < value:
+    try:
+        if chapterTimes[mangaId] < value:
+            chapterTimes[mangaId] = value
+    except KeyError:
         chapterTimes[mangaId] = value
 
 db.close()
